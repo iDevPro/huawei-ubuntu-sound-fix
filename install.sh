@@ -17,31 +17,33 @@ installService() {
     echo "Complete!"
 }
 
+INSTALL=$(declare -f installService)
+
 if command -v apt &>/dev/null; then
     echo "Using apt to install dependencies..."
     sudo apt update
     sudo apt install -y alsa-tools alsa-utils
-    sudo installService
+    sudo bash -c "$INSTALL"
 elif 
     command -v pacman &>/dev/null; then
     echo "Using pacman to install dependencies..."
     sudo pacman -Sy alsa-tools alsa-utils --noconfirm
-    sudo installService
+    sudo bash -c "$INSTALL"
 elif
     command -v eopkg &>/dev/null; then
     echo "Using eopkg to install dependencies..."
     sudo eopkg up
     sudo eopkg it alsa-tools alsa-utils -y
-    sudo installService
+    sudo bash -c "$INSTALL"
 elif 
     command -v dnf &>/dev/null; then
     echo "Using dnf to install dependencies..."
     sudo dnf install -y alsa-tools alsa-utils
-    sudo installService
+    sudo bash -c "$INSTALL"
 elif
     command -v apt-get &>/dev/null && grep -q "ID=altlinux" /etc/os-release; then
     echo "Using apt-get in AltLinux to install dependencies..."
-    su -l -c "apt-get update && apt-get dist-upgrade && apt-get install alsa-tools alsa-utils && installService"
+    su -l -c "apt-get update && apt-get dist-upgrade && apt-get install alsa-tools alsa-utils && $INSTALL"
 else
     echo "Neither apt, pacman, eopkg, nor dnf found. Cannot install dependencies."
     exit 1
