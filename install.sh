@@ -17,6 +17,10 @@ elif
     command -v dnf &>/dev/null; then
     echo "Using dnf to install dependencies..."
     sudo dnf install -y alsa-tools alsa-utils
+elif
+    command -v apt-get &>/dev/null && grep -q "ID=altlinux" /etc/os-release; then
+    echo "Using apt-get in AltLinux to install dependencies..."
+    su -l -c "apt-get update && apt-get dist-upgrade && apt-get install alsa-tools alsa-utils"
 else
     echo "Neither apt, pacman, eopkg, nor dnf found. Cannot install dependencies."
     exit 1
